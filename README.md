@@ -18,6 +18,25 @@ The *Product ID* option is a numeric ID used to identify the update, and when us
 
 If the product is a *variable product* (known as *child products* in TSUL), editing the license rule after creating or saving will display any variable product information. Different *activation limits* and *expiries* can be set for these.
 
+### Update Plugin Generator
+
+Included under the *Tools* menu is an update plugin creator, which will generate a plugin for your customers that will handle plugin and theme updates. The *Header ID* option is used to identify products (using numerical IDs) in headers of themes and plugins. An example would be "Tuxedo Update ID". Say you have created an update rule with a *Product ID* of 999. To identify this to the update plugin your theme or plugin header information should include "Tuxedo Update ID: 999".
+
+Example for a plugin would look like:
+
+    <?php
+    /*
+    Plugin Name: Example Plugin Name
+    Plugin URI: https://exampleplugin.com
+    Description: Example plugin
+    Version: 0.1.0
+    Author: The Example Plugin Team
+    Author URI: http://author.exampleplugin.com
+    Text Domain: example-plugin
+    Domain Path: /languages
+    Tuxedo Update ID: 999
+    */
+
 ### REST API
 
 TSUL uses the REST API for update requests. A namespace of *tuxedo-updater/v1* with a route of */get-updates/* is registered for this purpose.
@@ -42,7 +61,6 @@ And gives the following output in JSON encoding:
             @type string           $new_version Update version.
             @type bool             $autoupdate  Should product be updated automatically?
             @type int              $expires     Amount of days the license will expire in, -1 for never.
-            @type bool             $no_update   Version compare.
         }
     
         @type array            $update_key  {
