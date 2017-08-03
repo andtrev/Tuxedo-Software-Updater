@@ -64,7 +64,6 @@ add_action( 'rest_api_init', 'tux_su_register_rest_api_routes' );
  * @type string           $new_version Update version.
  * @type bool             $autoupdate  Should product be updated automatically?
  * @type int              $expires     Amount of days the license will expire in, -1 for never.
- * @type bool             $no_update   Version compare.
  * }
  * @type array            $update_key  {
  * Update key and error info.
