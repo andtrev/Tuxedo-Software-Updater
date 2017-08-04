@@ -259,11 +259,56 @@ function tux_su_edd_create_license_on_order_completed( $payment_id ) {
 
 	$date_completed = date( 'Y-m-d', strtotime( $date_completed ) );
 
-	foreach ( $order_items as $order_item ) {
+	$all_bundled_items = array();
 
-		$product_ids[] = $order_item['id'];
+	foreach ( $order_items as $item_index => $order_item ) {
 
-	}
+		$item_type = edd_get_download_type( $order_item['id'] );
+
+		if ( 'bundle' === $item_type ) {
+
+			$get_bundled_items = edd_get_bundled_products( $order_item['id'] );
+			$bundled_items     = array();
+
+			foreach ( $get_bundled_items as $bundled_item ) {
+
+				$bundled_item_id = explode( '_', $bundled_item );
+
+				if ( isset( $bundled_item_id[1] ) ) {
+
+					$bundled_item_id[1] = array(
+						'item_number' => array(
+							'options' => array(
+								'price_id' => $bundled_item_id[1],
+							),
+						),
+					);
+
+				} else {
+
+					$bundled_item_id[1] = array();
+
+				}
+
+				$bundled_items[] = array_merge( array(
+					'id'   => $bundled_item_id[0],
+					'name' => get_the_title( $bundled_item_id[0] ),
+				), $bundled_item_id[1] );
+
+				$product_ids[] = $bundled_item_id[0];
+
+			}
+
+			$all_bundled_items = array_merge( $all_bundled_items, $bundled_items );
+
+		} else {
+
+			$product_ids[] = $order_item['id'];
+
+		} // End if().
+	} // End foreach().
+
+	$order_items = array_merge( $order_items, $all_bundled_items );
 
 	$licenses = tux_su_get_db( array(
 		'user_id'    => array( 0, $user_id ),
